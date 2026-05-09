@@ -1,28 +1,20 @@
-# Build stage
-FROM node:22-bookworm-slim AS build
+FROM node:22-bookworm-slim
+
+ARG USERNAME=node
+ENV NODE_ENV=production
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-COPY cli.js index.js index.d.ts config.d.ts ./
+COPY cli.js index.js ./
 
-# Install playwright chromium deps and browser
 RUN npx -y playwright-core install-deps chromium && \
     npx -y playwright-core install --no-shell chromium
 
-# Runtime stage
-FROM node:22-bookworm-slim AS runtime
-
-ARG USERNAME=node
-ENV NODE_ENV=production
-ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-
-WORKDIR /home/${USERNAME}
-
-COPY --from=build --chown=${USERNAME}:${USERNAME} /app /app
-COPY --from=build --chown=${USERNAME}:${USERNAME} /ms-playwright /ms-playwright
+RUN chown -R ${USERNAME}:${USERNAME} /app /ms-playwright
 
 USER ${USERNAME}
 
