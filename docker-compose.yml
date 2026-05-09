@@ -6,12 +6,12 @@ services:
     container_name: jarvis-playwright-mcp
     restart: unless-stopped
     ports:
-      - "8931:8931"
-    command: ["--port", "8931", "--host", "0.0.0.0"]
+      - "8933:8933"
+    command: ["--port", "8933", "--host", "0.0.0.0"]
     environment:
       - NODE_ENV=production
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8931/"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8933/"]
       interval: 30s
       timeout: 5s
       retries: 3
