@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     ports:
       - "8933:8933"
-    command: ["--port", "8933", "--host", "0.0.0.0"]
+    command: ["--port", "8933", "--host", "0.0.0.0", "--allowed-hosts", "*"]
     environment:
       - NODE_ENV=production
     healthcheck:
